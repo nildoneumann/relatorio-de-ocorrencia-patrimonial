@@ -197,7 +197,6 @@
 <button type="button" class="btn" onclick="gerarPDF()">Baixar PDF</button>
 
 <script>
-
 const canvas = document.getElementById('assinatura');
 const ctx = canvas.getContext('2d');
 let desenhando = false;
@@ -205,22 +204,17 @@ let desenhando = false;
 function getPos(event) {
   if (event.touches) {
     const rect = canvas.getBoundingClientRect();
-    return {
-      x: event.touches[0].clientX - rect.left,
-      y: event.touches[0].clientY - rect.top
-    };
+    return { x: event.touches[0].clientX - rect.left, y: event.touches[0].clientY - rect.top };
   } else {
     return { x: event.offsetX, y: event.offsetY };
   }
 }
-
 function iniciarDesenho(e) {
   desenhando = true;
   const pos = getPos(e);
   ctx.beginPath();
   ctx.moveTo(pos.x, pos.y);
 }
-
 function desenhar(e) {
   if (!desenhando) return;
   e.preventDefault();
@@ -228,23 +222,17 @@ function desenhar(e) {
   ctx.lineTo(pos.x, pos.y);
   ctx.stroke();
 }
-
-function pararDesenho() {
-  desenhando = false;
-}
+function pararDesenho() { desenhando = false; }
 
 canvas.addEventListener('mousedown', iniciarDesenho);
 canvas.addEventListener('mousemove', desenhar);
 canvas.addEventListener('mouseup', pararDesenho);
 canvas.addEventListener('mouseleave', pararDesenho);
-
 canvas.addEventListener('touchstart', iniciarDesenho);
 canvas.addEventListener('touchmove', desenhar);
 canvas.addEventListener('touchend', pararDesenho);
 
-function limparAssinatura() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+function limparAssinatura() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
 function prepararAssinatura(clone) {
   const canvasOriginal = document.getElementById('assinatura');
@@ -278,7 +266,7 @@ function gerarPDF() {
     div.style.padding = '5px';
     div.style.minHeight = '80px';
     div.style.fontWeight = 'bold';
-    div.style.fontSize = '15px';
+    div.style.fontSize = '14px';
     div.style.backgroundColor = 'white';
     div.style.color = 'blue';
     div.textContent = textarea.value;
@@ -291,11 +279,11 @@ function gerarPDF() {
   container.appendChild(clone);
   document.body.appendChild(container);
   html2pdf().set({
-    margin: [10, 10, 10, 10],
+    margin: [5, 5, 5, 5],
     filename: gerarNomePDFComDataHora(),
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 4, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
+    html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   }).from(clone).save().then(() => {
     document.body.removeChild(container);
   });
@@ -313,9 +301,9 @@ async function compartilharPDF() {
     div.style.padding = '5px';
     div.style.minHeight = '80px';
     div.style.fontWeight = 'bold';
-    div.style.fontSize = '15px';
+    div.style.fontSize = '14px';
     div.style.backgroundColor = 'white';
-    div.style.color = 'black';
+    div.style.color = 'blue';
     div.textContent = textarea.value;
     textarea.parentNode.replaceChild(div, textarea);
   });
@@ -329,15 +317,21 @@ async function compartilharPDF() {
   document.body.appendChild(container);
 
   const opt = {
-    margin: 10,
+    margin: [5, 5, 5, 5],
     filename: gerarNomePDFComDataHora(),
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 4, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
+    html2canvas: { 
+      scale: 3,
+      useCORS: true,
+      scrollY: 0,
+      windowWidth: document.documentElement.scrollWidth,
+      windowHeight: document.documentElement.scrollHeight
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  const worker = html2pdf().set(opt).from(clone);
-  const blob = await worker.outputPdf('blob');
+  const blob = await html2pdf().set(opt).from(clone).outputPdf('blob');
 
   const file = new File([blob], gerarNomePDFComDataHora(), { type: 'application/pdf' });
 
@@ -363,8 +357,6 @@ if ('serviceWorker' in navigator) {
     .then(() => console.log('Service Worker registrado com sucesso'))
     .catch(error => console.log('Erro ao registrar o Service Worker:', error));
 }
-
 </script>
-
 </body>
 </html>
