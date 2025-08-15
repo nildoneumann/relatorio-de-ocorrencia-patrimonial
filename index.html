@@ -288,6 +288,7 @@ function gerarPDF() {
                  },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    const blob = await html2pdf().set(opt).from(clone).outputPdf('blob');
   }).from(clone).save().then(() => {
     document.body.removeChild(container);
   });
