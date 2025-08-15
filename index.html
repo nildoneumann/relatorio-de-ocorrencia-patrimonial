@@ -283,6 +283,7 @@ function gerarPDF() {
     filename: gerarNomePDFComDataHora(),
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 3, useCORS: true, scrollY: 0 },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   }).from(clone).save().then(() => {
     document.body.removeChild(container);
