@@ -294,7 +294,7 @@ function gerarPDF() {
     },
 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
   };  
   html2pdf().set(opt).from(clone).save().then(() => {
     document.body.removeChild(container);
@@ -340,7 +340,7 @@ async function compartilharPDF() {
       windowHeight: document.documentElement.scrollHeight
     },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a3', orientation: 'portrait' }
   };
 
   const blob = await html2pdf().set(opt).from(clone).outputPdf('blob');
