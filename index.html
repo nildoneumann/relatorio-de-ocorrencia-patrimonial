@@ -15,7 +15,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 15px;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
       max-width: 900px;
       margin: auto;
@@ -56,7 +56,7 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 3px;
+      margin-top: 8px;
     }
     .linha-horizontal label,
     .linha-horizontal-2 label,
@@ -66,7 +66,7 @@
     }
     label {
       display: block;
-      margin-top: 7px;
+      margin-top: 8px;
     }
     input[type="text"],
     input[type="date"],
@@ -75,13 +75,13 @@
       width: 100%;
       padding: 5px;
       font-weight: bold;
-      font-size: 15px;
+      font-size: 14px;
       color: blue;
       border-radius: 4px;
     }
     textarea {
       height: auto;
-      min-height: 180px;
+      min-height: 80px;
       color: blue;
       font-family: Arial, sans-serif;
       font-size: 14px;
@@ -112,22 +112,22 @@
     }
     p {
       color: red;
-      margin-top: 1px;
-      font-size: 11px;
+      margin-top: 2px;
+      font-size: 12px;
       text-align: center;
       background-color: yellow;
       padding: 2px;
     }
     #pdf-content {
       background-color: #dbead5;
-      padding: 15px 10px;
+      padding: 14px 10px;
       border-radius: 4px;
     }
     canvas#assinatura {
       border: 1px solid #000;
     }
     .neumann {
-      font-size: 8px;
+      font-size: 9px;
       color: black;
       text-align: right;
       margin-bottom: 15px;
@@ -143,7 +143,7 @@
   </style>
 </head>
 <body>
-<label for="nome" style="font-size: 8px;">© 2025 Leonildo.Neumann</label>
+<label for="nome" style="font-size: 6px;">© 2025 Leonildo.Neumann</label>
   <div id="pdf-content">
 <div class="logo-container">
   <img src="logo-prefeitura.png" crossorigin="anonymous" alt="Prefeitura" class="logo">
@@ -250,18 +250,12 @@ function prepararAssinatura(clone) {
   }
 }
 
-function getNumeroRelatorio() {
-  const numero = document.querySelector('input[name="numero"]').value.trim();
+function gerarNomePDFComDataHora() {
   const agora = new Date();
   const data = agora.toLocaleDateString('pt-BR').split('/').reverse().join('-');
   const hora = agora.toTimeString().split(' ')[0].replace(/:/g, '-');
-  if (numero) {
-  return `relatorio_${numero}_${data}_${hora}.pdf`;
-} else {
-return `relatorio_${data}_${hora}.pdf`; // nome padrão caso esteja vazio
-  }
+  return `relatorio_${data}_${hora}.pdf`;
 }
-
 
 function gerarPDF() {
   const original = document.getElementById('pdf-content');
@@ -289,7 +283,7 @@ function gerarPDF() {
   
   const opt = {
     margin: [5, 5, 5, 5],
-    filename: getNumeroRelatorio(),
+    filename: gerarNomePDFComDataHora(),
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 3,
@@ -299,6 +293,7 @@ function gerarPDF() {
       windowHeight: document.documentElement.scrollHeight
     },
 pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+    
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };  
   html2pdf().set(opt).from(clone).save().then(() => {
@@ -335,7 +330,7 @@ async function compartilharPDF() {
 
   const opt = {
     margin: [5, 5, 5, 5],
-    filename: getNumeroRelatorio(),
+    filename: gerarNomePDFComDataHora(),
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { 
       scale: 3,
@@ -345,12 +340,12 @@ async function compartilharPDF() {
       windowHeight: document.documentElement.scrollHeight
     },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
-    jsPDF: { unit: 'mm', format: a4', orientation: 'portrait' }
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   const blob = await html2pdf().set(opt).from(clone).outputPdf('blob');
 
-  const file = new File([blob], getNumeroRelatorio(), { type: 'application/pdf' });
+  const file = new File([blob], gerarNomePDFComDataHora(), { type: 'application/pdf' });
 
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
     try {
